@@ -1,0 +1,3475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AturStok - Sistem Manajemen UMKM</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ========== GLOBAL STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+        
+        body {
+            background-color: #f4f6fb;
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3 { margin: 0; }
+        
+        /* ========== AUTH PAGES STYLES ========== */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .auth-box {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+        
+        .auth-page {
+            display: none;
+            padding: 30px;
+        }
+        
+        .auth-page.active {
+            display: block;
+        }
+        
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #3b33ac;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .auth-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #3b33ac;
+            outline: none;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3b33ac;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .auth-btn:hover {
+            background-color: #2a2480;
+        }
+        
+        .auth-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .auth-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+        
+        .auth-divider span {
+            background-color: white;
+            padding: 0 15px;
+            color: #777;
+        }
+        
+        .google-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .google-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .google-icon {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .auth-link a {
+            color: #3b33ac;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .success-message {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* ========== DASHBOARD STYLES ========== */
+        .dashboard-container {
+            display: none;
+        }
+        
+        .dashboard-container.active {
+            display: flex;
+        }
+        
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 230px;
+            background: #3b33ac;
+            height: 100vh;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b33ac;
+            font-weight: bold;
+        }
+        
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .menu li {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .menu li:hover {
+            background: #36357b;
+        }
+        
+        .menu .active {
+            background: #3d3b8e;
+        }
+        
+        /* ========== CONTENT AREA ========== */
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+            width: calc(100% - 250px);
+        }
+        
+        /* Hide all pages */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* General Layout Adjustments */
+        .header-area {
+            margin-bottom: 15px;
+        }
+        
+        .header-area h1 {
+            font-size: 30px;
+            font-weight: 900;
+            color: #1d1b4f;
+        }
+        
+        .header-area p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        
+        /* Base Card Style */
+        .card {
+            background: white;
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+            border: 1px solid #e2e8f0; 
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        /* Donut Chart Styling */
+        .donut-chart-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            flex-shrink: 0;
+        }
+        
+        .chart-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .chart-center-text .percent {
+            font-size: 36px;
+            font-weight: 800;
+            color: #3b33ac;
+            line-height: 1;
+        }
+        .chart-center-text .label {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        /* Bar Chart for Sales Overview (Mock) */
+        .bar-chart-mock {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 100%;
+            max-height: 100px;
+        }
+        
+        .bar-mock {
+            width: 15px;
+            background: #4b66be;
+            border-radius: 2px;
+            transition: height 0.3s;
+        }
+        
+        /* ==================================== */
+        /* ========== PAGE: DASHBOARD ========== */
+        /* ==================================== */
+        
+        .cards-container {
+            /* 2x2 grid */
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        /* Card 1: Prediksi Penjualan Overview */
+        #sales-overview-card {
+            height: 250px; 
+        }
+        
+        #sales-overview-card h3 {
+            font-weight: 400;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        #sales-overview-card .value {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .growth.positive { 
+            color: #10b981; 
+            font-weight: 600; 
+            font-size: 14px;
+        }
+        
+        .sales-chart-area {
+            flex-grow: 1;
+            display: flex;
+            align-items: flex-end;
+            padding-top: 15px;
+        }
+        
+        /* Card 2: Top Insight Otomatis */
+        #insight-card {
+            height: 250px;
+            background: #eef2ff; 
+            justify-content: space-between;
+        }
+        
+        #insight-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1b4f;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #374151;
+        }
+        
+        .insight-text b {
+            color: #4f46e5;
+            font-weight: 700;
+        }
+        
+        .insight-button {
+            background: #4f46e5;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            align-self: flex-end;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        
+        .insight-button:hover {
+            background: #3b33ac;
+        }
+        
+        /* Card 3: Produk Terlaris (Pareto) */
+        #pareto-card {
+            height: 330px;
+        }
+        
+        #pareto-card h3 {
+            font-weight: 600;
+            color: #1d1b4f;
+            font-size: 18px;
+        }
+        
+        .product-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .rank-badge {
+            width: 30px;
+            height: 30px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .product-details {
+            flex-grow: 1;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #1d1b4f;
+            font-size: 16px;
+        }
+        
+        .product-name span {
+            font-weight: 400;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .contribution-text {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .bar {
+            flex-grow: 1;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fill-bar {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .product-a-fill { width: 45%; background: #3b82f6; }
+        .product-b-fill { width: 20%; background: #6366f1; }
+        .product-c-fill { width: 15%; background: #10b981; }
+        
+        .total-sales {
+            font-size: 12px;
+            color: #374151;
+            font-weight: 600;
+            width: 100px; 
+            text-align: right;
+        }
+        
+        .other-products {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .detail-button {
+            background: none;
+            border: 1px solid #4f46e5;
+            color: #4f46e5;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-top: 10px;
+        }
+        
+        /* Card 4: Segmen Pelanggan */
+        #segment-card {
+            height: 330px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        #segment-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1b4f;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .segment-body {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .chart-legend {
+            list-style: none;
+            padding: 0;
+            font-size: 14px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        
+        .color-box {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .loyal-box { background: #3b82f6; }
+        .new-box { background: #9ca3af; }
+        
+        .insight-box {
+            background: #eef2ff;
+            border-left: 4px solid #4f46e5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #374151;
+            margin-top: auto;
+            width: 100%;
+        }
+        
+        .insight-box b {
+            color: #4f46e5;
+            font-weight: 700;
+        }
+        
+        /* ==================================== */
+        /* ========== PAGE: PREDIKSI ========== */
+        /* ==================================== */
+        
+        /* Container utama untuk tata letak 2 kolom */
+        .prediction-layout {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        /* Kolom kiri untuk settings dan insight */
+        .left-column {
+            flex-basis: 350px; 
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        /* Kolom kanan untuk chart */
+        .right-column {
+            flex-grow: 1;
+        }
+        
+        /* Settings Card Overwrite/Update */
+        #page-prediksi .settings-card { 
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        #page-prediksi .settings-card h3 {
+            font-weight: 700;
+            color: #1d1b4f;
+            margin-bottom: 15px;
+        }
+        
+        #page-prediksi .settings-grid {
+            display: flex;
+            flex-direction: column; 
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        #page-prediksi .input-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #374151;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        #page-prediksi select {
+            padding: 10px 12px;
+            width: 100%; 
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+            background-color: #f9fafb;
+            font-size: 15px;
+            appearance: none; 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath fill='%236B7280' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+        
+        /* Chart Card Overwrite/Update */
+        #page-prediksi .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            height: 500px; 
+        }
+        
+        #page-prediksi .chart-card h3 {
+            font-weight: 700;
+            color: #1d1b4f;
+            margin-bottom: 20px;
+        }
+        
+        /* Insight Card Aesthetic */
+        #page-prediksi .insight-card {
+            background: linear-gradient(135deg, #3b82f6, #4f46e5); 
+            padding: 25px;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        #page-prediksi .insight-card h3 {
+            font-weight: 800;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        #page-prediksi .insight-card p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        #page-prediksi .insight-card b {
+            color: #ffcc00; 
+        }
+        
+        .action-button {
+            background: white;
+            color: #4f46e5;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.2s;
+            align-self: flex-start;
+        }
+        
+        .action-button:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+        
+        /* Tambahan untuk Header di halaman Prediksi */
+        #page-prediksi .page-header {
+            margin-bottom: 15px;
+        }
+        
+        #page-prediksi .page-header h1 {
+            font-size: 30px;
+            font-weight: 900;
+            color: #1d1b4f;
+        }
+        
+        #page-prediksi .page-header p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        
+        /* ==================================== */
+        /* ========== PAGE: ANALISIS PRODUK (BARU) ========== */
+        /* ==================================== */
+        
+        /* Tata Letak 3 Kolom untuk Metrik ABC/XYZ */
+        .analysis-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Dua kolom utama, chart lebih besar */
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .chart-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .metrics-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        /* Card untuk Metrik Kunci */
+        .metric-card {
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 5px solid #3b82f6; /* Aksen warna */
+        }
+        
+        .metric-card h4 {
+            color: #4f46e5;
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .metric-card .big-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1d1b4f;
+        }
+        
+        .metric-card .description {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        
+        /* Card Tabel/List untuk Produk */
+        .product-list-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            flex-grow: 1;
+        }
+        
+        .product-list-card h3 {
+            font-weight: 700;
+            color: #1d1b4f;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .list-header {
+            display: flex;
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .list-header > div:nth-child(1) { width: 30%; } /* Nama */
+        .list-header > div:nth-child(2) { width: 30%; } /* Margin */
+        .list-header > div:nth-child(3) { width: 40%; text-align: right; } /* ABC/XYZ */
+        
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item > div {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .item-name {
+            width: 30%;
+            font-weight: 600;
+            color: #1d1b4f;
+        }
+        
+        .item-margin {
+            width: 30%;
+            color: #10b981; /* Hijau untuk Margin Tinggi */
+            font-weight: 500;
+        }
+        
+        .item-segment {
+            width: 40%;
+            text-align: right;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        
+        /* Segment Badges */
+        .segment-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: white;
+        }
+        .segment-A { background: #3b82f6; }
+        .segment-B { background: #f59e0b; }
+        .segment-C { background: #ef4444; }
+        .segment-X { background: #6366f1; }
+        .segment-Y { background: #10b981; }
+        .segment-Z { background: #9ca3af; }
+        
+        /* Combined Segment Badges (e.g., AX, BY) */
+        .combined-segment {
+            display: flex;
+            justify-content: flex-end;
+            gap: 4px;
+        }
+        
+        .combined-segment > span {
+            padding: 3px 7px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        
+        /* ==================================== */
+        /* ========== PAGE: ATUR STOK (BARU) ========== */
+        /* ==================================== */
+        
+        .stock-management-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .stock-input-section, .stock-sales-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .stock-table th, .stock-table td {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .stock-table th {
+            background-color: #f9fafb;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .stock-table td {
+            background-color: white;
+            color: #4b5563;
+        }
+        
+        .stock-table input {
+            box-sizing: border-box; 
+            padding: 8px;
+            border: 1px solid #e5e7eb;
+            width: 100%;
+            border-radius: 6px;
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        .stock-table input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .stock-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .save-stock-button {
+            background: #4f46e5;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        
+        .add-stock-row-button {
+            background: none;
+            color: #4f46e5;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #4f46e5;
+            transition: background 0.2s;
+        }
+        
+        .add-stock-row-button span {
+            font-size: 18px;
+            line-height: 1;
+            margin-right: 5px;
+        }
+        
+        .stock-summary {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        .stock-summary h4 {
+            color: #1d1b4f;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .stock-alert {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        .stock-alert h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        /* ==================================== */
+        /* ========== PAGE: SEGMENTASI PELANGGAN (UPDATED) ========== */
+        /* ==================================== */
+        
+        /* Styling untuk tabel preferensi */
+        .preference-table {
+            margin-top: 15px;
+        }
+        
+        .preference-header {
+            display: flex;
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .preference-header > div:nth-child(1) { width: 25%; }
+        .preference-header > div:nth-child(2) { width: 50%; }
+        .preference-header > div:nth-child(3) { width: 25%; }
+        
+        .preference-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+        
+        .preference-row:last-child {
+            border-bottom: none;
+        }
+        
+        .demographic-segment, .product-preference, .shopping-time {
+            padding: 0 5px;
+        }
+        
+        /* Styling untuk strategi pemasaran */
+        .strategy-list {
+            margin-top: 15px;
+        }
+        
+        .strategy-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .strategy-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .strategy-item h4 {
+            color: #1d1b4f;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .strategy-item p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #4b5563;
+        }
+        
+        /* Insight Summary Card */
+        .insight-summary-card {
+            background: white;
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 5px 10px rgba(0,0,0,0.03); 
+            border: 1px solid #e2e8f0; 
+            margin-top: 25px;
+        }
+        .insight-summary-card h3 {
+            font-weight: 700;
+            color: #1d1b4f;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .kecamatan-list {
+            display: flex;
+            gap: 30px;
+            padding-top: 10px;
+        }
+        .list-group {
+            flex: 1;
+        }
+        .list-group h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+        .list-group ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .list-group li {
+            padding: 5px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        /* ==================================== */
+        /* ========== PAGE: MANAJEMEN DATA (NEW) ========== */
+        /* ==================================== */
+        #page-manajemen-data .data-input-card {
+            margin-bottom: 30px;
+        }
+        
+        /* Table Styling for Data Input */
+        #transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        #transaction-table th, #transaction-table td {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        #transaction-table th {
+            background-color: #f9fafb;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        #transaction-table td {
+            background-color: white;
+            color: #4b5563;
+        }
+        
+        /* Input inside table cell */
+        #transaction-table input {
+            box-sizing: border-box; 
+            padding: 0;
+            border: none;
+            width: 100%;
+            background-color: transparent;
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        #transaction-table input:focus {
+            outline: none;
+            background-color: #f9fafb;
+            border-radius: 4px;
+            padding: 2px;
+        }
+        
+        /* Transaction Buttons */
+        .transaction-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .save-data-button {
+            background: #4f46e5;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        
+        .add-row-button {
+            background: none;
+            color: #4f46e5;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid #4f46e5;
+            transition: background 0.2s;
+        }
+        .add-row-button span {
+            font-size: 18px;
+            line-height: 1;
+            margin-right: 5px;
+        }
+        
+        /* NEW: Delete Button Style */
+        .delete-button {
+            background: #ef4444; /* Merah untuk Hapus */
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        .delete-button:hover:not([disabled]) {
+            background: #dc2626;
+        }
+        .delete-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Data Cleaning Log Timeline */
+        .data-cleaning-log {
+            margin-top: 40px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .data-cleaning-log h3 {
+            font-weight: 700;
+            color: #1d1b4f;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 25px; 
+        }
+        
+        /* Timeline Vertical Line */
+        .data-cleaning-log:before {
+            content: '';
+            position: absolute;
+            top: 50px; 
+            left: 20px; 
+            width: 2px;
+            height: calc(100% - 70px); 
+            background-color: #e5e7eb;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 17px;
+            width: 10px;
+            height: 10px;
+            background: #3b82f6; 
+            border-radius: 50%;
+            z-index: 1; 
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            width: 100%; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .log-text {
+            font-size: 14px;
+            color: #374151;
+            font-weight: 500;
+        }
+        
+        .log-text b {
+            color: #4f46e5;
+        }
+        
+        .log-status {
+            width: 8px;
+            height: 8px;
+            background: #9ca3af; 
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* NEW TIMELINE ITEM STYLES */
+        .log-success .timeline-dot { background: #10b981; }
+        .log-success .log-status { background: #10b981; }
+        
+        /* Logout Button */
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* ==================================== */
+        /* ========== PAGE: AKUN (UPDATED) ========== */
+        /* ==================================== */
+        
+        .profile-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .profile-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #4f46e5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .profile-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d1b4f;
+            margin-bottom: 5px;
+        }
+        
+        .profile-info p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .detail-group {
+            margin-bottom: 20px;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            color: #1d1b4f;
+            font-weight: 500;
+        }
+        
+        .stats-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #4f46e5;
+            font-size: 20px;
+        }
+        
+        .stats-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1d1b4f;
+            margin-bottom: 5px;
+        }
+        
+        .stats-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .account-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .account-action-btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .edit-profile-btn {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .edit-profile-btn:hover {
+            background: #3b33ac;
+        }
+        
+        .change-password-btn {
+            background: #eef2ff;
+            color: #4f46e5;
+            border: 1px solid #4f46e5;
+        }
+        
+        .change-password-btn:hover {
+            background: #e0e7ff;
+        }
+        
+        .delete-account-btn {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+        
+        .delete-account-btn:hover {
+            background: #fee2e2;
+        }
+    </style>
+</head>
+<body>
+    <!-- AUTHENTICATION PAGES -->
+    <div class="auth-container" id="auth-container">
+        <div class="auth-box">
+            <!-- Halaman Pendaftaran -->
+            <div id="register-page" class="auth-page active">
+                <div class="auth-logo">AturStok</div>
+                <h2 class="auth-title">Buat Akun Baru</h2>
+                
+                <div class="form-group">
+                    <label for="fullname">Nama Lengkap</label>
+                    <input type="text" id="fullname" placeholder="Nama Lengkap">
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthdate">Tanggal Lahir</label>
+                    <input type="text" id="birthdate" placeholder="mm/dd/yyyy">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">No Telepon</label>
+                    <input type="tel" id="phone" placeholder="No Telepon">
+                </div>
+                
+                <div class="form-group">
+                    <label for="umkm-name">Nama UMKM</label>
+                    <input type="text" id="umkm-name" placeholder="Nama UMKM">
+                </div>
+                
+                <div class="form-group">
+                    <label for="umkm-address">Alamat UMKM</label>
+                    <input type="text" id="umkm-address" placeholder="Alamat UMKM">
+                </div>
+                
+                <button class="auth-btn" onclick="register()">Daftar Sekarang</button>
+                
+                <div class="auth-link">
+                    Sudah punya akun? <a href="#" onclick="showAuthPage('login-page')">Login</a>
+                </div>
+            </div>
+            
+            <!-- Halaman Login -->
+            <div id="login-page" class="auth-page">
+                <div class="auth-logo">AturStok</div>
+                <h2 class="auth-title">Welcome back</h2>
+                <p style="text-align: center; margin-bottom: 20px; color: #666;">Welcome back! Please enter your details.</p>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+                
+                <button class="auth-btn" onclick="login()">Login</button>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <button class="google-btn">
+                    <svg class="google-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+                
+                <div class="auth-link">
+                    Don't have an account? <a href="#" onclick="showAuthPage('register-page')">Sign up for free</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-container" id="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="file:///C:\Users\Lenovo\Documents\IBS\Web\logo.jpg" class="logo">
+                 <h2>AturStok</h2>
+            </div>
+
+            <ul class="menu">
+                <li class="active">Dashboard</li>
+                <li>Prediksi Penjualan</li>
+                <li>Analisis Produk</li>
+                <li>Segmentasi Pelanggan</li> 
+                <li>Atur Stok</li>
+                <li>Manajemen Data</li>
+                <li>Akun</li>
+            </ul>
+            
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </aside>
+
+        <main class="content">
+            <!-- HALAMAN DASHBOARD -->
+            <section id="page-dashboard" class="page active">
+                
+                <div class="header-area">
+                    <h1>Selamat Datang, <span id="user-umkm-name">(Nama UMKM)</span> !</h1>
+                    <p>Terakhir diperbarui 5 menit lalu</p>
+                </div>
+
+                <div class="cards-container">
+
+                    <div class="card" id="sales-overview-card">
+                        <h3>Prediksi Penjualan Overview</h3>
+                        <h1 class="value">Rp 15.000.000</h1>
+                        <p class="growth positive">↑↑+15% dari bulan lalu</p>
+
+                        <div class="sales-chart-area">
+                            <div class="bar-chart-mock">
+                                <div class="bar-mock" style="height: 30%;"></div>
+                                <div class="bar-mock" style="height: 50%;"></div>
+                                <div class="bar-mock" style="height: 40%;"></div>
+                                <div class="bar-mock" style="height: 90%;"></div>
+                                <div class="bar-mock" style="height: 45%;"></div>
+                                <div class="bar-mock" style="height: 70%;"></div>
+                                <div class="bar-mock" style="height: 55%;"></div>
+                                <div class="bar-mock" style="height: 80%;"></div>
+                                <div class="bar-mock" style="height: 60%;"></div>
+                                <div class="bar-mock" style="height: 95%;"></div>
+                                <div class="bar-mock" style="height: 85%;"></div>
+                                <div class="bar-mock" style="height: 80%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="insight-card">
+                        <h3>Top Insight Otomatis</h3>
+                        <p class="insight-text">
+                            Produk A meningkat <b style="color:#4f46e5">30%</b> di akhir pekan, 
+                            tambahkan stok di hari <b style="color:#4f46e5">Sabtu-Minggu</b>.
+                            <br><br>
+                            <b>Saran Cuaca:</b> Cuaca saat ini <b>musim hujan</b>, kurangi stok produk sensitif kelembaban. Cuaca besok diprediksi <b>Hujan Ringan</b>. </p>
+                        <a href="#" class="insight-button" id="aturStokButton">Atur Stok Sekarang</a>
+                    </div>
+                    <div class="card" id="pareto-card">
+                        <h3>Produk Terlaris (Pareto)</h3>
+                        <p class="contribution-text">Kontribusi Penjualan</p>
+                        
+                        <ul class="product-list">
+                            <li class="product-item">
+                                <div class="rank-badge">1.</div>
+                                <div class="product-details">
+                                    <div class="bar-container">
+                                        <span class="product-name">PRODUK A (45%)</span>
+                                        <div class="bar"><div class="fill-bar product-a-fill"></div></div>
+                                        <span class="total-sales">80% Total Penjualan</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="product-item">
+                                <div class="rank-badge" style="background: #9ca3af;">2.</div>
+                                <div class="product-details">
+                                    <div class="bar-container">
+                                        <span class="product-name">PRODUK B (20%)</span>
+                                        <div class="bar"><div class="fill-bar product-b-fill"></div></div>
+                                        <span class="total-sales"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="product-item">
+                                <div class="rank-badge" style="background: #9ca3af;">3.</div>
+                                <div class="product-details">
+                                    <div class="bar-container">
+                                        <span class="product-name">PRODUK C (15%)</span>
+                                        <div class="bar"><div class="fill-bar product-c-fill"></div></div>
+                                        <span class="total-sales"></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <p class="other-products">Produk Lainnya (20%)</p>
+                        <button class="detail-button">Detail Pareto</button>
+                    </div>
+
+                    <div class="card" id="segment-card">
+                        <h3>Segmen Pelanggan</h3>
+                        <p class="contribution-text" style="align-self: flex-start;">Fokus Pada Pelanggan Setia</p>
+
+                        <div class="segment-body">
+                            <div class="donut-chart-container">
+                                <canvas id="segmentChart"></canvas>
+                                <div class="chart-center-text">
+                                    <div class="percent">85%</div>
+                                    <div class="label">Loyal</div>
+                                </div>
+                            </div>
+
+                            <ul class="chart-legend">
+                                <li class="legend-item">
+                                    <span class="color-box loyal-box"></span> Loyal (85%)
+                                </li>
+                                <li class="legend-item">
+                                    <span class="color-box new-box"></span> New (15%)
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="insight-box">
+                            <b>Insight!</b> Basis penanganan loyal sangat kuat. Dorong program referral dan reward.
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- HALAMAN PREDIKSI PENJUALAN -->
+            <section id="page-prediksi" class="page">
+
+                <div class="page-header">
+                    <h1>Prediksi Penjualan 📈</h1>
+                    <p>Kelola Stok & Strategi Penjualan dengan Data Akurat</p>
+                </div>
+
+                <div class="prediction-layout">
+
+                    <div class="left-column">
+                        
+                        <div class="settings-card">
+                            <h3>⚙️ Pengaturan Prediksi</h3>
+
+                            <div class="settings-grid">
+                                <div class="input-group">
+                                    <label for="horizonSelect">Pilih Horizon Waktu</label>
+                                    <select id="horizonSelect">
+                                        <option value="7">7 Hari Kedepan</option>
+                                        <option value="14">14 Hari Kedepan</option>
+                                        <option value="30">30 Hari Kedepan</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="dataSelect">Pilih Sumber Data</label>
+                                    <select id="dataSelect">
+                                        <option value="total">Penjualan Total (Overall Series)</option>
+                                        <option value="kategori">Berdasarkan Kategori</option>
+                                        <option value="terlaris">Berdasarkan Produk Terlaris</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <h3>Top Insight Minggu Ini ✨</h3>
+                            <p>
+                                Penjualan diprediksi **naik 20%** di periode yang Anda pilih. 
+                                Anda membutuhkan stok tambahan <b>350 unit</b> untuk menghindari kerugian *stock-out*.
+                            </p>
+                            <a href="#" class="action-button">Lihat Detail Stok</a>
+                        </div>
+
+                    </div>
+
+                    <div class="right-column">
+                        <div class="chart-card">
+                            <h3>Visualisasi Prediksi</h3>
+                            <canvas id="salesChart" style="max-height: 430px;"></canvas> 
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- HALAMAN ANALISIS PRODUK -->
+            <section id="page-analisis-produk" class="page">
+
+                <div class="page-header">
+                    <h1>Analisis Produk 🔎</h1>
+                    <p>Analisis ABC & XYZ untuk Strategi Stok yang Optimal</p>
+                </div>
+
+                <div class="analysis-container">
+
+                    <div class="chart-area">
+                        <div class="card" style="height: 350px;">
+                            <h3>Grafik Sebaran Klasifikasi (ABC vs XYZ)</h3>
+                            <canvas id="analysisChart" style="max-height: 300px;"></canvas>
+                        </div>
+                        
+                        <div class="product-list-card">
+                            <h3>Rekomendasi Strategi Produk</h3>
+                            
+                            <div class="list-header">
+                                <div>Produk</div>
+                                <div>Margin</div>
+                                <div style="text-align: right;">Klasifikasi (ABC/XYZ)</div>
+                            </div>
+
+                            <div class="list-item">
+                                <div class="item-name">Aksesoris Tangan Premium</div>
+                                <div class="item-margin">High (35%)</div>
+                                <div class="combined-segment">
+                                    <span class="segment-A segment-badge">A</span>
+                                    <span class="segment-X segment-badge">X</span>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="item-name">Kopi Bubuk Espresso Standar</div>
+                                <div class="item-margin">Medium (20%)</div>
+                                <div class="combined-segment">
+                                    <span class="segment-B segment-badge">B</span>
+                                    <span class="segment-Y segment-badge">Y</span>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="item-name">Snack Ringan Kemasan Kecil</div>
+                                <div class="item-margin">Low (10%)</div>
+                                <div class="combined-segment">
+                                    <span class="segment-C segment-badge">C</span>
+                                    <span class="segment-Z segment-badge">Z</span>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="item-name">Produk Musiman Edisi Natal</div>
+                                <div class="item-margin">Medium (25%)</div>
+                                <div class="combined-segment">
+                                    <span class="segment-A segment-badge">A</span>
+                                    <span class="segment-Z segment-badge">Z</span>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="item-name">Jasa Instalasi Tambahan</div>
+                                <div class="item-margin">High (40%)</div>
+                                <div class="combined-segment">
+                                    <span class="segment-B segment-badge">B</span>
+                                    <span class="segment-X segment-badge">X</span>
+                                </div>
+                            </div>
+                            
+                            <button class="detail-button" style="align-self: flex-start; margin-top: 15px;">Tampilkan Semua Data</button>
+                        </div>
+                    </div>
+
+                    <div class="metrics-area">
+                        <div class="metric-card">
+                            <h4>Klasifikasi Terbanyak (ABC)</h4>
+                            <div class="big-value">Kelas A (35 Produk)</div>
+                            <p class="description">Produk ini menyumbang 80% dari total pendapatan.</p>
+                        </div>
+                        <div class="metric-card" style="border-left-color: #f59e0b;">
+                            <h4>Klasifikasi Terbanyak (XYZ)</h4>
+                            <div class="big-value">Kelas X (45 Produk)</div>
+                            <p class="description">Permintaan paling stabil dan prediktif. Fokuskan stok.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Insight & Rekomendasi Utama</h3>
+                            <p style="font-size: 14px; line-height: 1.5; color: #374151;">
+                                Produk di segmen <b>AX</b> (High Value, Stable Demand) adalah prioritas utama. Pastikan tingkat stok yang tinggi dan pengadaan yang otomatis. <br><br>
+                                Produk <b>CZ</b> (Low Value, Volatile Demand) harus dipertimbangkan untuk dihentikan atau dijual dalam paket promosi untuk mengurangi biaya stok. </p>
+                            <a href="#" class="insight-button" style="align-self: flex-start; margin-top: auto;">Lihat Strategi Detail</a>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- HALAMAN SEGMENTASI PELANGGAN -->
+            <section id="page-peta-pelanggan" class="page">
+                <div class="header-area">
+                    <h1>Segmentasi Pelanggan UMKM F&B 🍽️</h1>
+                    <p>Analisis Pelanggan untuk Bisnis Makanan & Minuman Skala Mikro</p>
+                </div>
+
+                <div class="cards-container">
+                    <!-- Kartu 1: Distribusi Usia -->
+                    <div class="card" id="age-distribution-card">
+                        <h3>Distribusi Usia Pelanggan F&B</h3>
+                        <div class="chart-container" style="height: 200px; margin: 15px 0;">
+                            <canvas id="ageChart"></canvas>
+                        </div>
+                        <div class="insight-box">
+                            <b>Insight:</b> Mayoritas pelanggan usia 18-34 tahun cocok dengan menu kekinian dan harga terjangkau. Fokus pada porsi kecil dengan harga Rp 5.000-15.000.
+                        </div>
+                    </div>
+
+                    <!-- Kartu 2: Rasio Gender -->
+                    <div class="card" id="gender-card">
+                        <h3>Rasio Gender Pelanggan</h3>
+                        <div class="segment-body">
+                            <div class="donut-chart-container">
+                                <canvas id="genderChart"></canvas>
+                                <div class="chart-center-text">
+                                    <div class="percent">68%</div>
+                                    <div class="label">Perempuan</div>
+                                </div>
+                            </div>
+                            <ul class="chart-legend">
+                                <li class="legend-item">
+                                    <span class="color-box" style="background: #3b82f6;"></span> Perempuan (68%)
+                                </li>
+                                <li class="legend-item">
+                                    <span class="color-box" style="background: #10b981;"></span> Laki-laki (32%)
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="insight-box">
+                            <b>Insight:</b> Dominasi pelanggan perempuan menunjukkan peluang untuk menu dessert, minuman estetik, dan snack sehat dengan kemasan menarik.
+                        </div>
+                    </div>
+
+                    <!-- Kartu 3: Preferensi Produk F&B Berdasarkan Demografi -->
+                    <div class="card" id="preference-card">
+                        <h3>Preferensi Menu F&B Berdasarkan Demografi</h3>
+                        <div class="preference-table">
+                            <div class="preference-header">
+                                <div>Segmen Pelanggan</div>
+                                <div>Menu Favorit</div>
+                                <div>Budget Rata-rata</div>
+                            </div>
+                            <div class="preference-row">
+                                <div class="demographic-segment">
+                                    <span class="segment-badge" style="background: #3b82f6;">Pelajar/Mahasiswa</span>
+                                </div>
+                                <div class="product-preference">
+                                    Mie Instan Level, Kopi Susu, Snack Murah, Rice Bowl Simple
+                                </div>
+                                <div class="shopping-time">
+                                    Rp 8.000-15.000
+                                </div>
+                            </div>
+                            <div class="preference-row">
+                                <div class="demographic-segment">
+                                    <span class="segment-badge" style="background: #10b981;">Karyawan Muda</span>
+                                </div>
+                                <div class="product-preference">
+                                    Lunch Box, Kopi Special, Salad, Minuman Kekinian
+                                </div>
+                                <div class="shopping-time">
+                                    Rp 15.000-25.000
+                                </div>
+                            </div>
+                            <div class="preference-row">
+                                <div class="demographic-segment">
+                                    <span class="segment-badge" style="background: #f59e0b;">Ibu Rumah Tangga</span>
+                                </div>
+                                <div class="product-preference">
+                                    Lauk Praktis, Camilan Anak, Minuman Segar, Kue Traditional
+                                </div>
+                                <div class="shopping-time">
+                                    Rp 10.000-20.000
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kartu 4: Rekomendasi Strategi F&B Mikro -->
+                    <div class="card" id="strategy-card">
+                        <h3>Rekomendasi Strategi UMKM F&B</h3>
+                        <div class="strategy-list">
+                            <div class="strategy-item">
+                                <h4>🛒 Menu Bundling Hemat</h4>
+                                <p>Tawarkan <b>paket kombo</b> seperti "Nasi + Lauk + Minuman" dengan harga Rp 20.000. Bundling meningkatkan nilai transaksi rata-rata 25%.</p>
+                            </div>
+                            <div class="strategy-item">
+                                <h4>📱 Promosi WhatsApp & Instagram</h4>
+                                <p>Gunakan <b>story Instagram</b> untuk menu harian dan <b>WhatsApp</b> untuk pre-order. 70% pelanggan mikro lebih responsif di platform ini.</p>
+                            </div>
+                            <div class="strategy-item">
+                                <h4>⏰ Time-based Promotion</h4>
+                                <p>Terapkan <b>diskon 15%</b> di jam sepi (14:00-17:00) dan <b>buy 1 get 1</b> untuk menu yang hampir expired. Optimalkan revenue di waktu lowong.</p>
+                            </div>
+                        </div>
+                        <a href="#" class="insight-button" style="align-self: flex-start; margin-top: 15px;">Lihat Template Promosi</a>
+                    </div>
+                </div>
+
+                <!-- Insight Khusus UMKM F&B -->
+                <div class="insight-summary-card" style="margin-top: 25px;">
+                    <h3>📊 Insight Praktis untuk UMKM F&B</h3>
+                    
+                    <div class="kecamatan-list">
+                        <div class="list-group">
+                            <h4 style="color: #3b82f6; border-bottom: 2px solid #3b82f6;">💡 Tips Inventory Murah</h4>
+                            <ul>
+                                <li><b>Bahan Dasar:</b> Fokus pada 5 bahan utama yang multifungsi</li>
+                                <li><b>Minuman:</b> Sirup rasa + soda = 10 varian minuman</li>
+                                <li><b>Snack:</b> Roti tawar + topping = berbagai canai</li>
+                                <li><b>Lauk:</b> Ayam fillet bisa untuk 5 menu berbeda</li>
+                            </ul>
+                            <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">*Dengan 5 bahan dasar, bisa membuat 20+ varian menu*</p>
+                        </div>
+                        
+                        <div class="list-group">
+                            <h4 style="color: #10b981; border-bottom: 2px solid #10b981;">💰 Strategi Harga</h4>
+                            <ul>
+                                <li><b>Anchor Pricing:</b> Tampilkan menu Rp 25.000, jual best seller Rp 15.000</li>
+                                <li><b>Psycological Pricing:</b> Rp 14.900 terlihat lebih murah dari Rp 15.000</li>
+                                <li><b>Bundle:</b> Single item Rp 12.000, bundle Rp 20.000 (nilai tambah)</li>
+                                <li><b>Flash Sale:</b> Disk 30% untuk menu tertentu di jam sepi</li>
+                            </ul>
+                            <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">*Harga psycological meningkatkan konversi 18%*</p>
+                        </div>
+
+                        <div class="list-group">
+                            <h4 style="color: #f59e0b; border-bottom: 2px solid #f59e0b;">🎯 Marketing Mikro Efektif</h4>
+                            <ul>
+                                <li><b>WhatsApp Business:</b> Update story menu harian</li>
+                                <li><b>Instagram:</b> Foto simple dengan natural lighting</li>
+                                <li><b>Loyalty:</b> Stamp card beli 10 gratis 1</li>
+                                <li><b>Referral:</b> Bawa teman diskon 20%</li>
+                            </ul>
+                            <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">*90% UMKM sukses dimulai dari WhatsApp & mouth-to-mouth*</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HALAMAN ATUR STOK BARU -->
+            <section id="page-atur-stok" class="page">
+                <div class="header-area">
+                    <h1>Manajemen Stok Harian 📦</h1>
+                    <p>Kelola stok masuk, penjualan, dan monitoring inventory</p>
+                </div>
+
+                <div class="stock-management-container">
+                    <!-- Input Stok Masuk -->
+                    <div class="stock-input-section">
+                        <div class="card">
+                            <h3>➕ Input Stok Masuk</h3>
+                            <p>Tambahkan stok baru yang masuk ke inventory</p>
+                            
+                            <table class="stock-table" id="stock-in-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Jumlah</th>
+                                        <th>Harga Beli</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stock-in-body">
+                                    <tr>
+                                        <td><input type="text" placeholder="Nama Produk" class="product-name-input"></td>
+                                        <td><input type="number" value="0" min="0" class="quantity-input"></td>
+                                        <td><input type="number" value="0" min="0" class="price-input" placeholder="Rp"></td>
+                                        <td><button class="delete-button" onclick="deleteStockRow(this)">Hapus</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="stock-actions">
+                                <button class="save-stock-button" onclick="saveStockIn()">Simpan Stok Masuk</button>
+                                <button class="add-stock-row-button" onclick="addStockRow()"><span>+</span> Tambah Baris</button>
+                            </div>
+                        </div>
+
+                        <!-- Ringkasan Stok -->
+                        <div class="stock-summary">
+                            <h4>📊 Ringkasan Stok Saat Ini</h4>
+                            <div id="stock-summary-content">
+                                <p>Total Produk: <span id="total-products">0</span> item</p>
+                                <p>Total Stok: <span id="total-stock">0</span> unit</p>
+                                <p>Nilai Inventory: Rp <span id="inventory-value">0</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Penjualan -->
+                    <div class="stock-sales-section">
+                        <div class="card">
+                            <h3>💰 Input Penjualan</h3>
+                            <p>Catat penjualan harian untuk update stok otomatis</p>
+                            
+                            <table class="stock-table" id="sales-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Jumlah Terjual</th>
+                                        <th>Harga Jual</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-body">
+                                    <tr>
+                                        <td>
+                                            <select class="product-select" onchange="updateSalesPrice(this)">
+                                                <option value="">Pilih Produk</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="number" value="0" min="0" class="sales-quantity-input"></td>
+                                        <td><input type="number" value="0" min="0" class="sales-price-input" placeholder="Rp"></td>
+                                        <td><button class="delete-button" onclick="deleteSalesRow(this)">Hapus</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="stock-actions">
+                                <button class="save-stock-button" onclick="saveSales()">Simpan Penjualan</button>
+                                <button class="add-stock-row-button" onclick="addSalesRow()"><span>+</span> Tambah Baris</button>
+                            </div>
+                        </div>
+
+                        <!-- Alert Stok Menipis -->
+                        <div class="stock-alert" id="low-stock-alert" style="display: none;">
+                            <h4>⚠️ Stok Menipis</h4>
+                            <div id="low-stock-list">
+                                <!-- Daftar produk yang stoknya menipis akan dimuat di sini -->
+                            </div>
+                        </div>
+
+                        <!-- Riwayat Stok -->
+                        <div class="card">
+                            <h3>📈 Riwayat Stok Hari Ini</h3>
+                            <div id="stock-history">
+                                <p style="text-align: center; color: #6b7280; padding: 20px;">Belum ada aktivitas stok hari ini</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HALAMAN MANAJEMEN DATA -->
+            <section id="page-manajemen-data" class="page">
+                
+                <div class="header-area">
+                    <h1>Data Management & Settings ⚙️</h1>
+                    <p>Easy Useable use form manual transaction</p>
+                </div>
+
+                <div class="data-input-card card">
+                    <h3>Input Data Transaksi Manual</h3>
+
+                    <table id="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                                <th>Harga Satuan (Rp)</th>
+                                <th>Aksi</th> </tr>
+                        </thead>
+                        <tbody id="transaction-body">
+                            <tr>
+                                <td><input type="date" value="2024-05-20" disabled></td>
+                                <td><input type="text" value="Kopi Susu" disabled></td>
+                                <td><input type="number" value="2" min="1" disabled></td>
+                                <td><input type="text" value="25.000" disabled></td>
+                                <td><button class="delete-button" disabled title="Data tersimpan tidak bisa dihapus langsung">Hapus</button></td> </tr>
+                            <tr>
+                                <td><input type="date" value="2024-05-20" disabled></td>
+                                <td><input type="text" value="Roti Bakar" disabled></td>
+                                <td><input type="number" value="2" min="1" disabled></td>
+                                <td><input type="text" value="25.000" disabled></td>
+                                <td><button class="delete-button" disabled title="Data tersimpan tidak bisa dihapus langsung">Hapus</button></td> </tr>
+                            <tr>
+                                <td><input type="date" value="2024-05-21"></td>
+                                <td><input type="text" placeholder="Nama Produk"></td>
+                                <td><input type="number" value="1" min="1"></td>
+                                <td><input type="text" placeholder="Harga Satuan"></td>
+                                <td><button class="delete-button">Hapus</button></td> </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="transaction-actions">
+                        <button class="save-data-button" id="saveDataButton">Simpan Data Transaksi</button>
+                        <button class="add-row-button" id="addRowButton"><span>+</span> Tambah Baris</button>
+                    </div>
+                </div>
+                
+                <div class="data-cleaning-log" id="dataCleaningLog">
+                    <h3>Data Cleaning Log</h3>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: #ef4444;"></div>
+                        <div class="timeline-content">
+                            <span class="log-text">2024-05-19, 15.30 - Ditemukan <b>2 baris data ganda</b></span>
+                            <div class="log-status" title="Perlu Aksi" style="background: #ef4444;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: #10b981;"></div>
+                        <div class="timeline-content">
+                            <span class="log-text">2024-05-18, 08.00 - Data transaksi sukses disinkronkan</span>
+                            <div class="log-status" title="Selesai" style="background: #10b981;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background: #f59e0b;"></div>
+                        <div class="timeline-content">
+                            <span class="log-text">2024-05-17, 12.45 - Pembersihan data anomali harga</span>
+                            <div class="log-status" title="Sedang Diproses" style="background: #f59e0b;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- HALAMAN AKUN (UPDATED) -->
+            <section id="page-akun" class="page">
+                <div class="header-area">
+                    <h1>Akun Saya 👤</h1>
+                    <p>Kelola profil dan informasi akun Anda</p>
+                </div>
+
+                <div class="profile-container">
+                    <div class="profile-sidebar">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="profile-avatar" id="profile-avatar">AS</div>
+                                <div class="profile-info">
+                                    <h2 id="profile-name">Nama Pengguna</h2>
+                                    <p id="profile-umkm">Nama UMKM</p>
+                                </div>
+                            </div>
+                            
+                            <div class="account-actions">
+                                <button class="account-action-btn edit-profile-btn">
+                                    <span>✏️</span> Edit Profil
+                                </button>
+                                <button class="account-action-btn change-password-btn">
+                                    <span>🔒</span> Ubah Password
+                                </button>
+                                <button class="account-action-btn delete-account-btn">
+                                    <span>🗑️</span> Hapus Akun
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-card">
+                            <div class="stats-icon">📊</div>
+                            <div class="stats-number" id="total-transactions">0</div>
+                            <div class="stats-label">Total Transaksi</div>
+                        </div>
+                        
+                        <div class="stats-card">
+                            <div class="stats-icon">📦</div>
+                            <div class="stats-number" id="total-products-count">0</div>
+                            <div class="stats-label">Produk Terdaftar</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-main">
+                        <div class="profile-card">
+                            <h3>Informasi Pribadi</h3>
+                            <div class="profile-details">
+                                <div class="detail-group">
+                                    <div class="detail-label">Nama Lengkap</div>
+                                    <div class="detail-value" id="detail-fullname">-</div>
+                                </div>
+                                <div class="detail-group">
+                                    <div class="detail-label">Tanggal Lahir</div>
+                                    <div class="detail-value" id="detail-birthdate">-</div>
+                                </div>
+                                <div class="detail-group">
+                                    <div class="detail-label">Email</div>
+                                    <div class="detail-value" id="detail-email">-</div>
+                                </div>
+                                <div class="detail-group">
+                                    <div class="detail-label">No. Telepon</div>
+                                    <div class="detail-value" id="detail-phone">-</div>
+                                </div>
+                                <div class="detail-group">
+                                    <div class="detail-label">Nama UMKM</div>
+                                    <div class="detail-value" id="detail-umkm-name">-</div>
+                                </div>
+                                <div class="detail-group">
+                                    <div class="detail-label">Alamat UMKM</div>
+                                    <div class="detail-value" id="detail-umkm-address">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-card">
+                            <h3>Aktivitas Terbaru</h3>
+                            <div id="recent-activity">
+                                <p style="text-align: center; color: #6b7280; padding: 20px;">Belum ada aktivitas terbaru</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // =============================================
+        // AUTHENTICATION SYSTEM
+        // =============================================
+        
+        // Fungsi untuk menampilkan halaman auth tertentu
+        function showAuthPage(pageId) {
+            // Sembunyikan semua halaman auth
+            document.querySelectorAll('.auth-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Tampilkan halaman yang dipilih
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        // Fungsi untuk pendaftaran
+        function register() {
+            // Validasi form sederhana
+            const fullname = document.getElementById('fullname').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const phone = document.getElementById('phone').value;
+            const umkmName = document.getElementById('umkm-name').value;
+            const umkmAddress = document.getElementById('umkm-address').value;
+            
+            if (!fullname || !birthdate || !phone || !umkmName || !umkmAddress) {
+                alert('Harap isi semua field!');
+                return;
+            }
+            
+            // Simpan data pendaftaran ke localStorage
+            const userData = {
+                fullname,
+                birthdate,
+                phone,
+                umkmName,
+                umkmAddress,
+                email: `${fullname.toLowerCase().replace(/\s+/g, '')}@aturstok.com`,
+                password: 'default123' // Password default
+            };
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Simulasi pendaftaran berhasil
+            alert('Pendaftaran berhasil! Silakan login dengan email: ' + userData.email);
+            
+            // Pindah ke halaman login
+            showAuthPage('login-page');
+            
+            // Isi email di form login
+            document.getElementById('email').value = userData.email;
+        }
+        
+        // Fungsi untuk login
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                alert('Harap isi email dan password!');
+                return;
+            }
+            
+            // Ambil data user dari localStorage
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            
+            // Validasi login
+            if (userData && userData.email === email && userData.password === password) {
+                // Simpan status login
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                // Tampilkan dashboard
+                showDashboard();
+            } else {
+                alert('Email atau password salah!');
+            }
+        }
+        
+        // Fungsi untuk logout
+        function logout() {
+            // Hapus status login
+            localStorage.removeItem('isLoggedIn');
+            
+            // Tampilkan halaman auth
+            showAuth();
+        }
+        
+        // Fungsi untuk menampilkan dashboard
+        function showDashboard() {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('dashboard-container').classList.add('active');
+            
+            // Update nama UMKM di dashboard
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData && userData.umkmName) {
+                document.getElementById('user-umkm-name').textContent = userData.umkmName;
+            }
+            
+            // Inisialisasi dashboard
+            initDashboard();
+        }
+        
+        // Fungsi untuk menampilkan halaman auth
+        function showAuth() {
+            document.getElementById('auth-container').style.display = 'flex';
+            document.getElementById('dashboard-container').classList.remove('active');
+            
+            // Reset form login
+            document.getElementById('password').value = '';
+        }
+        
+        // =============================================
+        // DASHBOARD SYSTEM
+        // =============================================
+        
+        // Data stok global
+        let stockData = JSON.parse(localStorage.getItem('stockData')) || {};
+        let salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
+        
+        // Variabel untuk menyimpan referensi chart
+        let salesChartInstance = null;
+        let segmentChartInstance = null;
+        let analysisChartInstance = null;
+        let ageChartInstance = null;
+        let genderChartInstance = null;
+        
+        // Inisialisasi dashboard
+        function initDashboard() {
+            // PAGE SWITCHING - Semua halaman termasuk yang baru
+            document.querySelectorAll(".menu li").forEach((item, index) => {
+                item.addEventListener("click", () => {
+                    document.querySelectorAll(".menu li").forEach(li => li.classList.remove("active"));
+                    item.classList.add("active");
+
+                    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+
+                    const pageName = item.textContent.trim().toLowerCase();
+
+                    if (pageName === "dashboard") {
+                        document.getElementById("page-dashboard").classList.add("active");
+                        renderSegmentChart(); 
+                    }
+                    else if (pageName === "prediksi penjualan") {
+                        document.getElementById("page-prediksi").classList.add("active");
+                        renderSalesChart();
+                    }
+                    else if (pageName === "analisis produk") {
+                        document.getElementById("page-analisis-produk").classList.add("active");
+                        renderAnalysisChart();
+                    }
+                    else if (pageName === "segmentasi pelanggan") {
+                        document.getElementById("page-peta-pelanggan").classList.add("active");
+                        renderAgeChart();
+                        renderGenderChart();
+                    }
+                    else if (pageName === "atur stok") {
+                        document.getElementById("page-atur-stok").classList.add("active");
+                        loadStockData();
+                        updateProductSelect();
+                    }
+                    else if (pageName === "manajemen data") {
+                        document.getElementById("page-manajemen-data").classList.add("active");
+                        initDataManagement();
+                    }
+                    else if (pageName === "akun") {
+                        document.getElementById("page-akun").classList.add("active");
+                        loadProfileData();
+                    }
+                });
+            });
+
+            // Fungsi untuk tombol "Atur Stok Sekarang" di dashboard
+            document.getElementById('aturStokButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Aktifkan menu Atur Stok
+                document.querySelectorAll(".menu li").forEach(li => li.classList.remove("active"));
+                document.querySelectorAll(".menu li")[4].classList.add("active"); // Index 4 = Atur Stok
+                
+                document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+                document.getElementById("page-atur-stok").classList.add("active");
+                
+                loadStockData();
+                updateProductSelect();
+            });
+            
+            // Initial render for active page only
+            if (document.getElementById("page-prediksi") && document.getElementById("page-prediksi").classList.contains("active")) {
+                renderSalesChart();
+            }
+            if (document.getElementById("page-analisis-produk") && document.getElementById("page-analisis-produk").classList.contains("active")) {
+                renderAnalysisChart();
+            }
+            if (document.getElementById("page-dashboard") && document.getElementById("page-dashboard").classList.contains("active")) {
+                renderSegmentChart();
+            }
+            if (document.getElementById("page-peta-pelanggan") && document.getElementById("page-peta-pelanggan").classList.contains("active")) {
+                renderAgeChart();
+                renderGenderChart();
+            }
+            
+            // INISIALISASI FUNGSI MANAJEMEN DATA
+            initDataManagement();
+            loadStockData();
+        }
+
+        // =============================================
+        // PROFILE PAGE FUNCTIONS
+        // =============================================
+        
+        function loadProfileData() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            
+            if (userData) {
+                // Update avatar dengan inisial nama
+                const initials = userData.fullname.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('profile-avatar').textContent = initials;
+                
+                // Update informasi profil
+                document.getElementById('profile-name').textContent = userData.fullname;
+                document.getElementById('profile-umkm').textContent = userData.umkmName;
+                
+                // Update detail informasi
+                document.getElementById('detail-fullname').textContent = userData.fullname;
+                document.getElementById('detail-birthdate').textContent = userData.birthdate;
+                document.getElementById('detail-email').textContent = userData.email;
+                document.getElementById('detail-phone').textContent = userData.phone;
+                document.getElementById('detail-umkm-name').textContent = userData.umkmName;
+                document.getElementById('detail-umkm-address').textContent = userData.umkmAddress;
+                
+                // Update statistik
+                updateProfileStats();
+            }
+        }
+        
+        function updateProfileStats() {
+            // Hitung total produk
+            const totalProducts = Object.keys(stockData).length;
+            document.getElementById('total-products-count').textContent = totalProducts;
+            
+            // Hitung total transaksi
+            const totalTransactions = salesHistory.length;
+            document.getElementById('total-transactions').textContent = totalTransactions;
+            
+            // Update aktivitas terbaru
+            updateRecentActivity();
+        }
+        
+        function updateRecentActivity() {
+            const activityContainer = document.getElementById('recent-activity');
+            const recentActivities = salesHistory.slice(0, 5); // Ambil 5 aktivitas terbaru
+            
+            if (recentActivities.length === 0) {
+                activityContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">Belum ada aktivitas terbaru</p>';
+                return;
+            }
+            
+            let activityHTML = '<div style="display: flex; flex-direction: column; gap: 15px;">';
+            
+            recentActivities.forEach(activity => {
+                const icon = activity.type === 'stock_in' ? '📥' : '💰';
+                const typeText = activity.type === 'stock_in' ? 'Stok Masuk' : 'Penjualan';
+                const description = activity.type === 'stock_in' 
+                    ? `${activity.quantity} unit ${activity.product} ditambahkan`
+                    : `${activity.quantity} unit ${activity.product} terjual (Rp ${activity.revenue?.toLocaleString('id-ID') || 0})`;
+                
+                activityHTML += `
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: #f9fafb; border-radius: 10px;">
+                        <div style="font-size: 20px;">${icon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #1d1b4f;">${typeText}</div>
+                            <div style="font-size: 14px; color: #6b7280;">${description}</div>
+                        </div>
+                        <div style="font-size: 12px; color: #9ca3af;">${activity.timestamp.split(', ')[1]}</div>
+                    </div>
+                `;
+            });
+            
+            activityHTML += '</div>';
+            activityContainer.innerHTML = activityHTML;
+        }
+
+        // =============================================
+        // CHART FUNCTIONS
+        // =============================================
+        
+        // Helper function untuk generate data dummy yang berbeda berdasarkan seed (nilai dari dropdown)
+        function generateData(seed, length) {
+            let data = [];
+            let base = 500 + seed * 50; 
+            for (let i = 0; i < length; i++) {
+                data.push(Math.round(base + Math.random() * 150 - 75));
+            }
+            return data;
+        }
+        
+        function generatePrediction(actualData) {
+            return actualData.map(d => Math.round(d * (1 + Math.random() * 0.15 - 0.05)));
+        }
+        
+        function renderSalesChart() {
+            const ctx = document.getElementById('salesChart');
+            
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
+            }
+            
+            const horizonSelect = document.getElementById('horizonSelect');
+            const dataSelect = document.getElementById('dataSelect');
+        
+            if (!horizonSelect || !dataSelect) {
+                return; 
+            }
+            
+            const horizonValue = parseInt(horizonSelect.value);
+            const dataSource = dataSelect.value;
+        
+            let labels, dataLength;
+            let seed = 0; 
+        
+            dataLength = horizonValue;
+        
+            if (horizonValue === 7) {
+                labels = ["Hari 1", "Hari 2", "Hari 3", "Hari 4", "Hari 5", "Hari 6", "Hari 7"];
+                seed += 10;
+            } else if (horizonValue === 14) {
+                labels = ["Mgg 1", "Mgg 2"]; 
+                seed += 20; 
+            } else {
+                labels = ["Mgg 1", "Mgg 2", "Mgg 3", "Mgg 4"];
+                seed += 30;
+            }
+        
+            if (dataSource === "total") {
+                seed += 1;
+            } else if (dataSource === "kategori") {
+                seed += 2;
+            } else {
+                seed += 3;
+            }
+            
+            let actualSales = generateData(seed, dataLength);
+            let predictedSales = generatePrediction(actualSales);
+        
+            // Ini hanya logika untuk menyesuaikan data/label jika horizon tidak 7 hari.
+            // Dibiarkan apa adanya untuk tampilan, karena ini adalah mock-up data.
+            if (horizonValue !== 7) {
+                const aggregateData = (data, count) => {
+                    let aggregated = [];
+                    const chunkSize = Math.floor(dataLength / count); 
+                    const remainder = dataLength % count;
+                    
+                    let currentStartIndex = 0;
+                    for (let i = 0; i < count; i++) {
+                        const size = chunkSize + (i < remainder ? 1 : 0);
+                        const chunk = actualSales.slice(currentStartIndex, currentStartIndex + size);
+                        const sum = chunk.reduce((a, b) => a + b, 0);
+                        // Menggunakan sum untuk simulasi penjualan mingguan
+                        aggregated.push(Math.round(sum)); 
+                        currentStartIndex += size;
+                    }
+                    return aggregated;
+                };
+                
+                let labelCount = (horizonValue === 14) ? 2 : 4;
+                actualSales = aggregateData(actualSales, labelCount);
+                predictedSales = aggregateData(predictedSales, labelCount);
+            }
+            
+            salesChartInstance = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Penjualan Aktual (Historical)',
+                            data: actualSales,
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: false,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                        },
+                        {
+                            label: 'Prediksi Penjualan',
+                            data: predictedSales,
+                            borderColor: '#10b981',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: false,
+                            pointRadius: 4, 
+                            pointHoverRadius: 6,
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)', 
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: '#f3f4f6'
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                callback: function(value) {
+                                    return value.toLocaleString() + ' Unit';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false 
+                            },
+                            ticks: {
+                                color: '#6b7280'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#374151',
+                                font: {
+                                    family: "Inter",
+                                    size: 14,
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toLocaleString() + ' Unit';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // CHART (SEGMENTASI PELANGGAN) - SEGMENT CHART
+        function renderSegmentChart() {
+            const ctx = document.getElementById('segmentChart');
+        
+            if (segmentChartInstance) {
+                segmentChartInstance.destroy();
+            }
+            
+            segmentChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Loyal', 'New'],
+                    datasets: [{
+                        data: [85, 15],
+                        backgroundColor: [
+                            '#3b82f6', 
+                            '#9ca3af'  
+                        ],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // =============================================
+        // CHART (ANALISIS PRODUK) - SCATTER PLOT ABC/XYZ
+        // =============================================
+        function renderAnalysisChart() {
+            const ctx = document.getElementById('analysisChart');
+        
+            if (analysisChartInstance) {
+                analysisChartInstance.destroy();
+            }
+        
+            const dataAX = Array.from({length: 10}, () => ({
+                x: 90 + Math.random() * 10,
+                y: 80 + Math.random() * 20,
+                label: 'AX'
+            }));
+            const dataCZ = Array.from({length: 20}, () => ({
+                x: 10 + Math.random() * 20,
+                y: 10 + Math.random() * 30,
+                label: 'CZ'
+            }));
+            const dataBY = Array.from({length: 15}, () => ({
+                x: 40 + Math.random() * 40,
+                y: 40 + Math.random() * 40,
+                label: 'BY'
+            }));
+        
+            analysisChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'AX (High Value & Stable)',
+                            data: dataAX,
+                            backgroundColor: '#4f46e5',
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        },
+                        {
+                            label: 'BY (Medium Value & Normal)',
+                            data: dataBY,
+                            backgroundColor: '#10b981',
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        },
+                        {
+                            label: 'CZ (Low Value & Volatile)',
+                            data: dataCZ,
+                            backgroundColor: '#ef4444',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Variabilitas Permintaan (XYZ: Z=Volatile, X=Stable)',
+                                color: '#4b5563'
+                            },
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value === 100) return 'Stable (X)';
+                                    if (value === 50) return 'Normal (Y)';
+                                    if (value === 0) return 'Volatile (Z)';
+                                    return '';
+                                },
+                                color: '#6b7280'
+                            },
+                            grid: { color: '#e5e7eb' }
+                        },
+                        y: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Nilai Penjualan Kumulatif (ABC: C=Low, A=High)',
+                                color: '#4b5563'
+                            },
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value === 100) return 'High (A)';
+                                    if (value === 50) return 'Medium (B)';
+                                    if (value === 0) return 'Low (C)';
+                                    return '';
+                                },
+                                color: '#6b7280'
+                            },
+                            grid: { color: '#e5e7eb' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const data = context.raw;
+                                    return `[${data.label}] Demand: ${data.x.toFixed(0)}, Value: ${data.y.toFixed(0)}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: { color: '#374151' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // =============================================
+        // CHART UNTUK SEGMENTASI PELANGGAN BARU
+        // =============================================
+        
+        // Chart untuk distribusi usia
+        function renderAgeChart() {
+            const ctx = document.getElementById('ageChart');
+            
+            if (ageChartInstance) {
+                ageChartInstance.destroy();
+            }
+            
+            ageChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['18-24', '25-34', '35-50', '51+'],
+                    datasets: [{
+                        label: 'Persentase Pelanggan',
+                        data: [35, 40, 20, 5],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#10b981',
+                            '#f59e0b',
+                            '#9ca3af'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 50,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Chart untuk distribusi gender
+        function renderGenderChart() {
+            const ctx = document.getElementById('genderChart');
+            
+            if (genderChartInstance) {
+                genderChartInstance.destroy();
+            }
+            
+            genderChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Perempuan', 'Laki-laki'],
+                    datasets: [{
+                        data: [68, 32],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#10b981'
+                        ],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // =============================================
+        // FUNGSI MANAJEMEN STOK
+        // =============================================
+        
+        function addStockRow() {
+            const tbody = document.getElementById('stock-in-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Nama Produk" class="product-name-input"></td>
+                <td><input type="number" value="0" min="0" class="quantity-input"></td>
+                <td><input type="number" value="0" min="0" class="price-input" placeholder="Rp"></td>
+                <td><button class="delete-button" onclick="deleteStockRow(this)">Hapus</button></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+        
+        function deleteStockRow(button) {
+            const row = button.closest('tr');
+            if (document.getElementById('stock-in-body').children.length > 1) {
+                row.remove();
+            }
+        }
+        
+        function saveStockIn() {
+            const rows = document.getElementById('stock-in-body').getElementsByTagName('tr');
+            let hasValidData = false;
+        
+            for (let row of rows) {
+                const productName = row.querySelector('.product-name-input').value.trim();
+                const quantity = parseInt(row.querySelector('.quantity-input').value);
+                const price = parseInt(row.querySelector('.price-input').value);
+        
+                if (productName && quantity > 0) {
+                    hasValidData = true;
+                    
+                    // Update stock data
+                    if (!stockData[productName]) {
+                        stockData[productName] = {
+                            stock: 0,
+                            buyPrice: price,
+                            sellPrice: Math.ceil(price * 1.3) // Auto calculate sell price
+                        };
+                    }
+                    
+                    stockData[productName].stock += quantity;
+                    if (price > 0) {
+                        stockData[productName].buyPrice = price;
+                    }
+        
+                    // Add to history
+                    const historyEntry = {
+                        type: 'stock_in',
+                        product: productName,
+                        quantity: quantity,
+                        price: price,
+                        timestamp: new Date().toLocaleString('id-ID')
+                    };
+                    salesHistory.unshift(historyEntry);
+                }
+            }
+        
+            if (hasValidData) {
+                // Save to localStorage
+                localStorage.setItem('stockData', JSON.stringify(stockData));
+                localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+                
+                // Update UI
+                updateStockSummary();
+                updateProductSelect();
+                updateStockHistory();
+                showLowStockAlert();
+                
+                // Clear input forms
+                document.getElementById('stock-in-body').innerHTML = `
+                    <tr>
+                        <td><input type="text" placeholder="Nama Produk" class="product-name-input"></td>
+                        <td><input type="number" value="0" min="0" class="quantity-input"></td>
+                        <td><input type="number" value="0" min="0" class="price-input" placeholder="Rp"></td>
+                        <td><button class="delete-button" onclick="deleteStockRow(this)">Hapus</button></td>
+                    </tr>
+                `;
+                
+                alert('Stok berhasil disimpan!');
+            } else {
+                alert('Harap isi data yang valid!');
+            }
+        }
+        
+        // FUNGSI PENJUALAN
+        function addSalesRow() {
+            const tbody = document.getElementById('sales-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <select class="product-select" onchange="updateSalesPrice(this)">
+                        <option value="">Pilih Produk</option>
+                    </select>
+                </td>
+                <td><input type="number" value="0" min="0" class="sales-quantity-input"></td>
+                <td><input type="number" value="0" min="0" class="sales-price-input" placeholder="Rp"></td>
+                <td><button class="delete-button" onclick="deleteSalesRow(this)">Hapus</button></td>
+            `;
+            tbody.appendChild(newRow);
+            updateProductSelectInRow(newRow);
+        }
+        
+        function deleteSalesRow(button) {
+            const row = button.closest('tr');
+            if (document.getElementById('sales-body').children.length > 1) {
+                row.remove();
+            }
+        }
+        
+        function updateProductSelect() {
+            const selects = document.querySelectorAll('.product-select');
+            selects.forEach(select => {
+                updateProductSelectInRow(select.closest('tr'));
+            });
+        }
+        
+        function updateProductSelectInRow(row) {
+            const select = row.querySelector('.product-select');
+            const currentValue = select.value;
+            
+            select.innerHTML = '<option value="">Pilih Produk</option>';
+            
+            for (const productName in stockData) {
+                if (stockData[productName].stock > 0) {
+                    const option = document.createElement('option');
+                    option.value = productName;
+                    option.textContent = `${productName} (Stok: ${stockData[productName].stock})`;
+                    select.appendChild(option);
+                }
+            }
+            
+            // Restore previous selection if still available
+            if (currentValue && stockData[currentValue] && stockData[currentValue].stock > 0) {
+                select.value = currentValue;
+                updateSalesPrice(select);
+            }
+        }
+        
+        function updateSalesPrice(select) {
+            const productName = select.value;
+            const row = select.closest('tr');
+            const priceInput = row.querySelector('.sales-price-input');
+            
+            if (productName && stockData[productName]) {
+                priceInput.value = stockData[productName].sellPrice || 0;
+            } else {
+                priceInput.value = 0;
+            }
+        }
+        
+        function saveSales() {
+            const rows = document.getElementById('sales-body').getElementsByTagName('tr');
+            let hasValidData = false;
+            let totalRevenue = 0;
+        
+            for (let row of rows) {
+                const productSelect = row.querySelector('.product-select');
+                const productName = productSelect.value;
+                const quantity = parseInt(row.querySelector('.sales-quantity-input').value);
+                const price = parseInt(row.querySelector('.sales-price-input').value);
+        
+                if (productName && quantity > 0 && price > 0) {
+                    if (stockData[productName] && stockData[productName].stock >= quantity) {
+                        hasValidData = true;
+                        
+                        // Update stock
+                        stockData[productName].stock -= quantity;
+                        totalRevenue += quantity * price;
+        
+                        // Add to history
+                        const historyEntry = {
+                            type: 'sale',
+                            product: productName,
+                            quantity: quantity,
+                            price: price,
+                            revenue: quantity * price,
+                            timestamp: new Date().toLocaleString('id-ID')
+                        };
+                        salesHistory.unshift(historyEntry);
+                    } else {
+                        alert(`Stok ${productName} tidak mencukupi! Stok tersedia: ${stockData[productName]?.stock || 0}`);
+                        return;
+                    }
+                }
+            }
+        
+            if (hasValidData) {
+                // Save to localStorage
+                localStorage.setItem('stockData', JSON.stringify(stockData));
+                localStorage.setItem('salesHistory', JSON.stringify(salesHistory));
+                
+                // Update UI
+                updateStockSummary();
+                updateProductSelect();
+                updateStockHistory();
+                showLowStockAlert();
+                
+                // Clear sales form
+                document.getElementById('sales-body').innerHTML = `
+                    <tr>
+                        <td>
+                            <select class="product-select" onchange="updateSalesPrice(this)">
+                                <option value="">Pilih Produk</option>
+                            </select>
+                        </td>
+                        <td><input type="number" value="0" min="0" class="sales-quantity-input"></td>
+                        <td><input type="number" value="0" min="0" class="sales-price-input" placeholder="Rp"></td>
+                        <td><button class="delete-button" onclick="deleteSalesRow(this)">Hapus</button></td>
+                    </tr>
+                `;
+                updateProductSelect();
+                
+                alert(`Penjualan berhasil disimpan! Pendapatan: Rp ${totalRevenue.toLocaleString('id-ID')}`);
+            } else {
+                alert('Harap isi data penjualan yang valid!');
+            }
+        }
+        
+        // FUNGSI UPDATE UI
+        function loadStockData() {
+            updateStockSummary();
+            updateStockHistory();
+            showLowStockAlert();
+        }
+        
+        function updateStockSummary() {
+            let totalProducts = 0;
+            let totalStock = 0;
+            let inventoryValue = 0;
+        
+            for (const productName in stockData) {
+                totalProducts++;
+                totalStock += stockData[productName].stock;
+                inventoryValue += stockData[productName].stock * (stockData[productName].buyPrice || 0);
+            }
+        
+            document.getElementById('total-products').textContent = totalProducts;
+            document.getElementById('total-stock').textContent = totalStock;
+            document.getElementById('inventory-value').textContent = inventoryValue.toLocaleString('id-ID');
+        }
+        
+        function updateStockHistory() {
+            const historyContainer = document.getElementById('stock-history');
+            const today = new Date().toDateString();
+            const todayHistory = salesHistory.filter(entry => 
+                new Date(entry.timestamp).toDateString() === today
+            );
+        
+            if (todayHistory.length === 0) {
+                historyContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">Belum ada aktivitas stok hari ini</p>';
+                return;
+            }
+        
+            let historyHTML = '<div style="max-height: 200px; overflow-y: auto;">';
+            todayHistory.forEach(entry => {
+                const icon = entry.type === 'stock_in' ? '📥' : '💰';
+                const typeText = entry.type === 'stock_in' ? 'Stok Masuk' : 'Penjualan';
+                const revenueText = entry.revenue ? ` (Rp ${entry.revenue.toLocaleString('id-ID')})` : '';
+                
+                historyHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                        <div>
+                            <span style="font-weight: 600;">${icon} ${typeText}</span><br>
+                            <small>${entry.product} - ${entry.quantity} unit${revenueText}</small>
+                        </div>
+                        <small style="color: #6b7280;">${entry.timestamp.split(', ')[1]}</small>
+                    </div>
+                `;
+            });
+            historyHTML += '</div>';
+            historyContainer.innerHTML = historyHTML;
+        }
+        
+        function showLowStockAlert() {
+            const alertContainer = document.getElementById('low-stock-alert');
+            const lowStockList = document.getElementById('low-stock-list');
+            const lowStockProducts = [];
+        
+            for (const productName in stockData) {
+                if (stockData[productName].stock <= 5) { // Threshold stok menipis
+                    lowStockProducts.push({
+                        name: productName,
+                        stock: stockData[productName].stock
+                    });
+                }
+            }
+        
+            if (lowStockProducts.length > 0) {
+                let alertHTML = '';
+                lowStockProducts.forEach(product => {
+                    alertHTML += `<p>${product.name}: ${product.stock} unit tersisa</p>`;
+                });
+                lowStockList.innerHTML = alertHTML;
+                alertContainer.style.display = 'block';
+            } else {
+                alertContainer.style.display = 'none';
+            }
+        }
+        
+        // =============================================
+        // LOGIKA MANAJEMEN DATA (FUNGSI ASLI)
+        // =============================================
+        
+        function createNewRow() {
+            const today = new Date().toISOString().split('T')[0];
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="date" value="${today}"></td>
+                <td><input type="text" placeholder="Nama Produk"></td>
+                <td><input type="number" value="1" min="1"></td>
+                <td><input type="text" placeholder="Harga Satuan"></td>
+                <td><button class="delete-button">Hapus</button></td> `;
+            return newRow;
+        }
+        
+        function addNewLog(message, isSuccess = true) {
+            const logContainer = document.getElementById('dataCleaningLog');
+            
+            const newLogItem = document.createElement('div');
+            newLogItem.classList.add('timeline-item');
+            if (isSuccess) {
+                newLogItem.classList.add('log-success');
+            }
+        
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+            const statusColor = isSuccess ? '#10b981' : '#ef4444';
+            const statusTitle = isSuccess ? 'Selesai' : 'Error';
+        
+            newLogItem.innerHTML = `
+                <div class="timeline-dot" style="background: ${statusColor};"></div>
+                <div class="timeline-content">
+                    <span class="log-text">${dateStr}, ${timeStr} - ${message}</span>
+                    <div class="log-status" title="${statusTitle}" style="background: ${statusColor};"></div>
+                </div>
+            `;
+        
+            // Tambahkan log baru di urutan paling atas (setelah h3)
+            const h3 = logContainer.querySelector('h3');
+            logContainer.insertBefore(newLogItem, h3.nextSibling);
+        
+            // Hapus log terlama jika jumlahnya melebihi 5
+            const allLogs = logContainer.querySelectorAll('.timeline-item');
+            if (allLogs.length > 5) {
+                 // Hapus log yang paling lama (yang terakhir dalam list)
+                logContainer.removeChild(allLogs[allLogs.length - 1]);
+            }
+        }
+        
+        // FUNGSI BARU: Untuk melampirkan event listener Hapus
+        function attachDeleteListeners(row) {
+            const deleteButton = row.querySelector('.delete-button');
+            // Hanya tambahkan listener jika tombol tidak disabled (berarti baris input baru)
+            if (deleteButton && !deleteButton.disabled) { 
+                deleteButton.addEventListener('click', (event) => {
+                    const rowToDelete = event.target.closest('tr');
+                    if (rowToDelete) {
+                        // Konfirmasi sebelum menghapus
+                        if (confirm("Anda yakin ingin menghapus baris transaksi ini?")) {
+                            rowToDelete.remove();
+                            addNewLog(`Baris data transaksi <b>dihapus</b> oleh pengguna.`, true);
+                        }
+                    }
+                });
+            }
+        }
+        
+        function initDataManagement() {
+            const addRowButton = document.getElementById('addRowButton');
+            const saveDataButton = document.getElementById('saveDataButton');
+            const transactionBody = document.getElementById('transaction-body');
+        
+            // Helper untuk format Rupiah tanpa simbol Rp
+            function formatRupiah(number) {
+                // Menggunakan Intl.NumberFormat untuk format yang lebih baik
+                return number.toLocaleString('id-ID', { minimumFractionDigits: 0 });
+            }
+            
+            // Lampirkan listener Hapus ke semua baris yang sudah ada (termasuk baris input awal)
+            const existingRows = transactionBody.getElementsByTagName('tr');
+            Array.from(existingRows).forEach(row => attachDeleteListeners(row));
+        
+            if (addRowButton) {
+                addRowButton.addEventListener('click', () => {
+                    const newRow = createNewRow();
+                    transactionBody.appendChild(newRow);
+                    attachDeleteListeners(newRow); // Lampirkan listener Hapus ke baris baru
+                });
+            }
+        
+            if (saveDataButton) {
+                saveDataButton.addEventListener('click', () => {
+                    const rows = transactionBody.getElementsByTagName('tr');
+                    let validCount = 0;
+        
+                    // 1. Proses validasi dan penonaktifan (simulasi tersimpan)
+                    for (const row of Array.from(rows)) {
+                        const inputs = row.getElementsByTagName('input');
+                        const deleteButton = row.querySelector('.delete-button'); // Ambil tombol delete
+        
+                        // Lewati baris yang sudah tersimpan (disabled)
+                        if (inputs.length === 0 || inputs[0].disabled) {
+                            continue; 
+                        }
+        
+                        const tanggal = inputs[0].value.trim();
+                        const produk = inputs[1].value.trim();
+                        // Ambil nilai jumlah sebagai angka
+                        const jumlah = parseInt(inputs[2].value.trim()); 
+                        // Bersihkan nilai harga dari karakter non-angka dan konversi ke integer
+                        const hargaBersih = parseInt(inputs[3].value.trim().replace(/[^0-9]/g, '')); 
+        
+                        // Validasi data
+                        if (tanggal && produk && !isNaN(jumlah) && jumlah > 0 && !isNaN(hargaBersih) && hargaBersih > 0) {
+                            // Data Valid: Ubah menjadi status tersimpan (disabled)
+                            inputs[0].disabled = true;
+                            inputs[1].disabled = true;
+                            inputs[2].disabled = true;
+                            inputs[3].disabled = true;
+                            
+                            // Menonaktifkan tombol hapus untuk data yang sudah tersimpan
+                            if (deleteButton) { 
+                                deleteButton.disabled = true; 
+                                deleteButton.title = "Data tersimpan tidak bisa dihapus langsung";
+                            }
+        
+                            // Format harga untuk tampilan setelah disimpan
+                            inputs[3].value = formatRupiah(hargaBersih); 
+                            validCount++;
+                        }
+                    }
+                    
+                    // 2. Tambahkan log
+                    if (validCount > 0) {
+                        const newLogMessage = `Data <b>${validCount} transaksi</b> baru berhasil <b>disimpan</b> ke database.`;
+                        addNewLog(newLogMessage, true);
+                    } else {
+                        const errorLogMessage = `Penyimpanan data <b>gagal</b>. Tidak ada data valid yang siap disimpan. (Pastikan semua kolom terisi)`;
+                        addNewLog(errorLogMessage, false);
+                    }
+        
+                                        // 3. Pastikan ada baris input kosong yang baru di akhir
+                    const lastRow = transactionBody.lastElementChild;
+                    
+                    if (lastRow) {
+                        const lastRowInputs = lastRow.getElementsByTagName('input');
+                        
+                        if (lastRowInputs.length > 0 && lastRowInputs[0].disabled === true) {
+                             // Baris terakhir adalah data yang baru disimpan, tambahkan baris input baru
+                            const newRow = createNewRow();
+                            transactionBody.appendChild(newRow); 
+                            attachDeleteListeners(newRow); // Penting: Lampirkan listener Hapus ke baris baru
+                        }
+                    }
+                });
+            }
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        
+        // Inisialisasi - tampilkan halaman pendaftaran pertama kali
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cek apakah user sudah login
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                // Jika sudah login, langsung tampilkan dashboard
+                showDashboard();
+            } else {
+                // Jika belum login, tampilkan halaman auth
+                showAuth();
+                showAuthPage('register-page');
+                
+                // Jika sudah ada data user, isi form login dengan email
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (userData) {
+                    document.getElementById('email').value = userData.email;
+                }
+            }
+            
+            // Tambahkan event listener untuk dropdown prediksi
+            const horizonSelect = document.getElementById('horizonSelect');
+            const dataSelect = document.getElementById('dataSelect');
+
+            if (horizonSelect) {
+                horizonSelect.addEventListener('change', renderSalesChart);
+            }
+
+            if (dataSelect) {
+                dataSelect.addEventListener('change', renderSalesChart);
+            }
+        });
+    </script>
+</body>
+</html>
